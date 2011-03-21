@@ -1,0 +1,3 @@
+Module containing a civicrm hook for a more efficient search. Used on the autocomplete on the navigation bar.
+When you type something, it searches first at the start of the last name or organisation name, then first name, then last name.
+This strategy works especially well when you have above 5k contacts.

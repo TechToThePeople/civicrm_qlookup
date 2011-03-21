@@ -1,0 +1,8 @@
+name = civicrm_qlookup
+description = Module containing a hook for a more efficient search. Used on the autocomplete on the navigation bar.
+When you type something, it searches first at the start of the last name or organisation name, then first name, then last name.
+This strategy works especially well when you have above 5k contacts.
+dependencies[] = civicrm
+package = CiviCRM
+core = 6.x
+version = 1.0
