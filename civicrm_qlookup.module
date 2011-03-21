@@ -1,6 +1,10 @@
 <?php 
 
 function  civicrm_qlookup_civicrm_contactListQuery ( &$query, $name, $context, $id ) {
+  //@TODO
+  // search on the email if name contains @
+  // if name contains a space, split, sort the word(s) by length and select smaller from select longer 
+  // if nb words >2, skip the smallest
   if ($context == 'navigation') {
     $limit=11;
     $fastSearchLimit = 3;
