@@ -4,5 +4,5 @@ When you type something, it searches first at the start of the last name or orga
 This strategy works especially well when you have above 5k contacts.
 dependencies[] = civicrm
 package = CiviCRM
-core = 6.x
-version = 1.0
+core = 7.x
+version = 1.1
