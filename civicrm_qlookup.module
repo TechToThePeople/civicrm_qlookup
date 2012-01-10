@@ -11,12 +11,12 @@ function  civicrm_qlookup_civicrm_contactListQuery ( &$query, $name, $context, $
     // ideally, the hook isn't on the query, but on the result, but that will be trivial to do when moving the autocomplete to the api
     // @TODO if the search result < 11 (the limit of the autocomplete, replace the query by LIKE '%name%)
     if (strlen ($name) > $fastSearchLimit) {
-      $query = "(SELECT c.sort_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR 
+      $query = "(SELECT c.display_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR 
        c.first_name LIKE '$name%' ORDER BY sort_name limit $limit ) UNION 
-       (SELECT c.sort_name as data, c.id FROM civicrm_contact c, civicrm_email m where c.id = m.contact_id AND email like '$name%' ORDER BY sort_name limit $limit )";
+       (SELECT c.display_name as data, c.id FROM civicrm_contact c, civicrm_email m where c.id = m.contact_id AND email like '$name%' ORDER BY sort_name limit $limit )";
       //feels like it works better by searching on all emails instead of only the primary one. IMMV
     } else { // we assume that more than 25 will come up on the first or last name before having to dig on the email too (union are expensive)
-      $query = "SELECT c.sort_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR c.first_name LIKE '$name%' ORDER BY sort_name LIMIT ".$limit;
+      $query = "SELECT c.display_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR c.first_name LIKE '$name%' ORDER BY sort_name LIMIT ".$limit;
     }
   }
 }
