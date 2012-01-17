@@ -1,4 +1,48 @@
 <?php 
+/**
+ * Implementation of hook_block().
+ *
+ * This hook both declares to Drupal what blocks are provided by the module, and
+ * generates the contents of the blocks themselves.
+ */
+function civicrm_qlookup_block_info () {
+  $blocks ['civicrm_qlookup'] = array (
+    'info' => t('CiviCRM Contact Search')
+  );
+  return $blocks;
+}
+
+function civicrm_qlookup_block_view($delta = '0') {
+  civicrm_initialize();
+ // civicrm_add_jquery();
+/*      if ( ! civicrm_initialize( ) ) {
+                return;
+}
+ */
+//  <script type="text/javascript" src="{$config->resourceBase}packages/jquery/plugins/jquery.autocomplete.js"></script>
+    drupal_add_js ('var cj = jQuery;','inline');
+  drupal_add_js(drupal_get_path('module', 'civicrm') .'/../packages/jquery/plugins/jquery.autocomplete.js');
+  drupal_add_js(drupal_get_path('module', 'civicrm') .'/../js/rest.js');
+        $block = array( );
+        $block['name'   ] = 'block-civicrm-qlookup';
+        $block['id'     ] = $block['name'] . '_' ;
+        $block['subject'] = 'Contact search';
+        $block['content'] = '<div id="crm-container"><input id="qlookup_sort_name" class="form-text ac_input" type="text" style="width: 90%;" name="sort_name" autocomplete="off"></div>
+<script>
+cj(function(){
+              cj("#qlookup_sort_name").crmAutocomplete({}, {
+                    result:function(data){
+                            document.location="/civicrm/contact/view?reset=1&cid="+data.id;
+                    }
+              });
+});
+</script>
+          ';
+        return $block;
+
+}
+
+
 
 function  civicrm_qlookup_civicrm_contactListQuery ( &$query, $name, $context, $id ) {
   //@TODO
@@ -13,10 +57,10 @@ function  civicrm_qlookup_civicrm_contactListQuery ( &$query, $name, $context, $
     if (strlen ($name) > $fastSearchLimit) {
       $query = "(SELECT c.display_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR 
        c.first_name LIKE '$name%' ORDER BY sort_name limit $limit ) UNION 
-       (SELECT c.display_name as data, c.id FROM civicrm_contact c, civicrm_email m where c.id = m.contact_id AND email like '$name%' ORDER BY sort_name limit $limit )";
+       (SELECT c.display_name as data, c.id FROM civicrm_contact c, civicrm_email m where c.id = m.contact_id AND email like '$name%' AND is_deleted=0 ORDER BY sort_name limit $limit )";
       //feels like it works better by searching on all emails instead of only the primary one. IMMV
     } else { // we assume that more than 25 will come up on the first or last name before having to dig on the email too (union are expensive)
-      $query = "SELECT c.display_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR c.first_name LIKE '$name%' ORDER BY sort_name LIMIT ".$limit;
+      $query = "SELECT c.display_name as data, c.id FROM civicrm_contact c WHERE c.sort_name LIKE '$name%' OR c.first_name LIKE '$name%' AND is_deleted=0 ORDER BY sort_name LIMIT ".$limit;
     }
   }
 }
